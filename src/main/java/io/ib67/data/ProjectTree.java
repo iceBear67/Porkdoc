@@ -48,7 +48,7 @@ public class ProjectTree {
     }
 
     public void iterateClasses(Consumer<TreeClass> classConsumer) {
-        flat(ofPackage("io")).stream().flatMap(e -> e.classes().stream()).forEach(classConsumer);
+        rootPackages().parallelStream().map(this::flat).flatMap(Collection::stream).flatMap(e -> e.classes().stream()).forEach(classConsumer);
     }
 
     private List<TreePackage> flat(TreePackage treePackage) {

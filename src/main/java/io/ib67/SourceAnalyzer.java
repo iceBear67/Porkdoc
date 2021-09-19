@@ -20,7 +20,14 @@ import java.util.function.BiConsumer;
 @Slf4j
 @RequiredArgsConstructor
 public class SourceAnalyzer implements BiConsumer<URL, String> {
+    private static final SourceAnalyzer DEFAULT = new SourceAnalyzer(ProjectTree.DEFAULT);
+
+    public static SourceAnalyzer defaultImpl() {
+        return DEFAULT;
+    }
+
     private final ProjectTree tree;
+
     @Override
     public void accept(URL file, String s) {
         try {

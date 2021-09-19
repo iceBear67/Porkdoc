@@ -14,11 +14,10 @@ public class Javadoc {
     protected static volatile long time;
 
     public static void main(String[] args) {
-        ISourceWalker.of(Paths.get("/home/icybear/IdeaProjects/Javadoc")).walk((f, s) -> {
-            sourceAnalyzers.computeIfAbsent(f, z -> new SourceAnalyzer(ProjectTree.DEFAULT)).accept(f, s);
-        }, () -> {
+        long time = System.currentTimeMillis();
+        ISourceWalker.of(Paths.get("/home/icybear/IdeaProjects/New Zombie")).walk(SourceAnalyzer.defaultImpl(), () -> {
             //System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(ProjectTree.DEFAULT));
-            System.out.println("Done!");
+            System.out.println("Done! Took " + (System.currentTimeMillis() - time) + "ms");
         }).waitFor();
         ProjectTree.DEFAULT.iterateClasses(System.out::println);
     }

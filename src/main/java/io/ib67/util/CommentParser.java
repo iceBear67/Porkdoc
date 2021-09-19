@@ -61,6 +61,7 @@ public class CommentParser {
                     case "@deprecated":
                         if (s.length == 0) {
                             deprecation = "Just Deprecated";
+                            break;
                         }
                         deprecation = s[1];
                         break;
