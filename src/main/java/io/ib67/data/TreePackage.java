@@ -1,20 +1,23 @@
 package io.ib67.data;
 
-import com.sun.source.tree.Tree;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Builder
 @Getter
 public class TreePackage implements TreeObject {
     @Builder.Default
-    private Map<String, TreePackage> subPackages = new HashMap<>();
+    private Map<String, TreePackage> subPackages = new ConcurrentHashMap<>();
     @Builder.Default
-    private Map<String,TreeClass> classMap = new HashMap<>();
+    private Map<String, TreeClass> classMap = new ConcurrentHashMap<>();
     private String stage;
     @Builder.Default
+    @Setter
     private Comment comment = Comment.EMPTY_COMMENT;
     private TreePackage parent;
     public Collection<TreePackage> subPackages(){
