@@ -38,9 +38,14 @@ public class TreePackage implements TreeObject {
         }
         return pointer;
     }
-    public TreeClass ofClass(String name){
+
+    public Collection<TreeClass> classes() {
+        return classMap.values();
+    }
+
+    public TreeClass ofClass(String name) {
         var a = this;
-        return classMap.computeIfAbsent(name,n -> TreeClass.builder().packageName(a.toString()).name(n).build());
+        return classMap.computeIfAbsent(name, n -> TreeClass.builder().packageName(a.toString()).name(n).build());
     }
 
     @Override

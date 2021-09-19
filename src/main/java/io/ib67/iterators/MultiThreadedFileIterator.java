@@ -11,16 +11,23 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
-public class MultiThreadedFileIterator implements IterableSources{
+public class MultiThreadedFileIterator implements IterableSources {
     private Path path;
     private Executor readPool = ForkJoinPool.commonPool();
-    public MultiThreadedFileIterator(Path path){
-        this.path=path;
+    private int total = 0;
+    private Runnable whenDone;
+    private AtomicInteger counter = new AtomicInteger();
+
+    public MultiThreadedFileIterator(Path path) {
+        this.path = path;
     }
+
     @Override
-    public void run(BiConsumer<URL, String> consumer) {
+    public void run(BiConsumer<URL, String> consumer, Runnable whenDone) {
+        this.whenDone = whenDone;
         try {
             Files.walkFileTree(path, new SimpleFileVisitor<>() {
                 @Override
@@ -30,23 +37,33 @@ public class MultiThreadedFileIterator implements IterableSources{
 
                 @Override
                 public FileVisitResult visitFile(Path path, BasicFileAttributes basicFileAttributes) {
+                    //   System.out.println(path.toFile());
                     File file = path.toFile();
                     if (!file.getName().endsWith(".java")) {
                         return FileVisitResult.CONTINUE;
                     }
-                    readPool.execute(()->{
+                    total++;
+                    readPool.execute(() -> {
                         try (var is = new FileInputStream(file)) {
                             String list = new String(is.readAllBytes());
-                            consumer.accept(file.toURI().toURL(),list);
+                            consumer.accept(file.toURI().toURL(), list);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        collect();
                     });
                     return FileVisitResult.CONTINUE;
                 }
             });
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void collect() {
+        int i = counter.incrementAndGet();
+        if (i == total) {
+            whenDone.run();
         }
     }
 }
