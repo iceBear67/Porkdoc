@@ -1,5 +1,6 @@
-package io.ib67.data;
+package io.ib67.data.tree;
 
+import io.ib67.data.Comment;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,5 +1,7 @@
-package io.ib67.data;
+package io.ib67.data.tree;
 
+import io.ib67.data.Comment;
+import io.ib67.data.adapt.SimplifiedTreePackage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +21,7 @@ public class TreePackage implements TreeObject {
     @Builder.Default
     @Setter
     private Comment comment = Comment.EMPTY_COMMENT;
-    private TreePackage parent;
+    private transient TreePackage parent;
     public Collection<TreePackage> subPackages(){
         return subPackages.values();
     }
@@ -40,14 +42,19 @@ public class TreePackage implements TreeObject {
         var a = this;
         return classMap.computeIfAbsent(name,n -> TreeClass.builder().packageName(a.toString()).name(n).build());
     }
+
     @Override
     public String toString() {
-        if(stage == null){ // default package.
+        if (stage == null) { // default package.
             return "";
         }
-        if(parent==null){
+        if (parent == null) {
             return stage;
         }
-        return parent+"."+stage;
+        return parent + "." + stage;
+    }
+
+    public SimplifiedTreePackage toSimplified() {
+        return SimplifiedTreePackage.builder().subPackages(subPackages.keySet()).classes(classMap.keySet()).build();
     }
 }

@@ -1,5 +1,6 @@
 package io.ib67.data;
 
+import io.ib67.util.Pair;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,13 +17,13 @@ public class Comment {
     private String data=null;
     @Nullable
     @Builder.Default
-    private String deprecated=null;
+    private String deprecated = null;
     @Builder.Default
     @Nullable
-    private List<String> params=null;
+    private List<Pair<String, String>> params = null;
     @Builder.Default
     @Nullable
-    private String see=null;
+    private String see = null;
     @Builder.Default
     @Nullable
     private String author=null;

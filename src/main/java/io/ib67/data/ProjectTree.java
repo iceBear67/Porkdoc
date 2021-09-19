@@ -1,17 +1,19 @@
 package io.ib67.data;
 
+import io.ib67.data.tree.TreeClass;
+import io.ib67.data.tree.TreePackage;
 import lombok.Getter;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ProjectTree {
-    private static final Map<String,ProjectTree> trees = new HashMap<>();
+    private static final Map<String, ProjectTree> trees = new ConcurrentHashMap<>();
     public static final ProjectTree DEFAULT = ProjectTree.of("DEFAULT");
     @Getter
     private String name;
-    private Map<String,TreePackage> packages = new HashMap<>();
+    private Map<String, TreePackage> packages = new ConcurrentHashMap<>();
     private ProjectTree(String name){this.name=name;}
     public static ProjectTree of(String name){
         return trees.computeIfAbsent(name, ProjectTree::new);

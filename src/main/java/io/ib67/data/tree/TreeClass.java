@@ -1,5 +1,8 @@
-package io.ib67.data;
+package io.ib67.data.tree;
 
+import io.ib67.data.ClassType;
+import io.ib67.data.Comment;
+import io.ib67.data.MethodArgument;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,12 +20,26 @@ public class TreeClass implements TreeObject {
     private String packageName;
     private String name;
     private ClassType type;
+    @Builder.Default
+    private List<String> annotations = new ArrayList<>();
+    @Builder.Default
+    private List<String> interfaces = new ArrayList<>();
+    @Setter
+    private String parentClass;
     @Setter
     private Comment comment;
 
     @Override
     public String toString() {
         return packageName.length() == 0 ? name : packageName + "." + name;
+    }
+
+    public void addAnnotation(String FQDN) {
+        annotations.add(FQDN);
+    }
+
+    public void addInterface(String FQDN) {
+        interfaces.add(FQDN);
     }
 
     public TreeField ofField(String name, String typeFQDN) {
